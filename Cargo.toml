@@ -1,0 +1,15 @@
+[package]
+name = "lion"
+version = "0.1.0"
+edition = "2024"
+
+[lints.rust]
+# Unused imports allowed so no warnings flagged unnecessarily
+unused_imports = { level = "allow" }
+
+[dependencies]
+anyhow = "1.0.97"
+clap = { version = "4.5.32", features = ["derive"] }
+serde = { version = "1.0.219", features = ["derive"] }
+thiserror = "2.0.12"
+toml = "0.8.20"
