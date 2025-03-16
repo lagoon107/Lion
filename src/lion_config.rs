@@ -10,15 +10,15 @@ pub struct Config {
     pub bin: Bin
 }
 
-impl Into<Config> for &str {
-    fn into(self) -> Config {
-        toml::from_str(self).context("Calling into() to turn string into `Config`.").unwrap()
+impl From<&str> for Config {
+    fn from(val: &str) -> Config {
+        toml::from_str(val).context("Calling into() to turn `String` into `Config`.").unwrap()
     }
 }
 
-impl Into<Config> for String {
-    fn into(self) -> Config {
-        toml::from_str(self.as_str()).context("Calling into() to turn string into `Config`.").unwrap()
+impl From<String> for Config {
+    fn from(val: String) -> Config {
+        toml::from_str(val.as_str()).context("Calling into() to turn `&str`into `Config`.").unwrap()
     }
 }
 
@@ -35,14 +35,15 @@ pub struct Pkg {
 pub struct Bin {
     /// Files in project to compile.
     pub files: Vec<String>,
-    /// Name of resulting executable file.
-    pub out: Option<String>
+    /// Output dir.
+    pub out_dir: Option<String>,
+    /// Filename of compiled .exe file.
+    pub out_file: Option<String>
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::prelude::*;
 
     #[test]
     fn test_config_deserialize() {
@@ -69,7 +70,8 @@ mod tests {
                 },
                 bin: Bin {
                     files: vec!["src/main.c".to_string()],
-                    out: None
+                    out_dir: None,
+                    out_file: None
                 }
             }
         );
