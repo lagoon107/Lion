@@ -39,9 +39,9 @@ impl Lion {
 
         // Put basic "main" file into "src" folder
         fs::write(Path::join(&src_dir, "main.cpp"), r#"
-        #include <stdio.h>
-        int main() { printf("%d\n", 23); }
-        "#)
+#include <stdio.h>
+int main() { printf("%d\n", 23); }
+        "#.trim_start())
             .context("generating basic 'src/main.c' file")?;
 
         // Generate basic config file in newly created folder
