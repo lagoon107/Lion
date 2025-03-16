@@ -16,6 +16,12 @@ impl Into<Config> for &str {
     }
 }
 
+impl Into<Config> for String {
+    fn into(self) -> Config {
+        toml::from_str(self.as_str()).context("Calling into() to turn string into `Config`.").unwrap()
+    }
+}
+
 /// TOML Table holding metadata about current library/package.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Pkg {

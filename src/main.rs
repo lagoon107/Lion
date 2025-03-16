@@ -15,6 +15,9 @@ fn main() -> anyhow::Result<()> {
     match args.command {
         RootCommand::New {name} => {
             Lion::create_new_project(name)?;
+        },
+        RootCommand::Build => {
+            todo!()
         }
     }
 

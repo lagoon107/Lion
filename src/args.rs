@@ -13,7 +13,9 @@ pub enum RootCommand {
     /// Initializes new project with basic config file.
     New{
         name: String
-    }
+    },
+    /// Compiles project in current working directory.
+    Build
 }
 
 #[cfg(test)]

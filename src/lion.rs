@@ -28,6 +28,14 @@ impl Lion {
             return Err(anyhow!("folder with name {proj_name} already exists"))
         }
 
+        // Create "src" folder
+        let src_dir = Path::join(&Path::new(&proj_name), "src");
+        if !fs::exists(&src_dir)? {
+            fs::create_dir(&src_dir).context("creating 'src' dir in lion project")?;
+        } else {
+            return Err(anyhow!("folder with name {src_dir:?} already exists"))
+        }
+
         // Generate basic config file in newly created folder
         fs::write(Path::join(&Path::new(&proj_name), "lion.toml"), format!(r#"
             [pkg]
@@ -40,6 +48,11 @@ impl Lion {
         "#)).context("writing new simple lion config")?;
 
         Ok(())
+    }
+
+    /// Parses the given config file path to the `Config` struct.
+    pub fn parse_config(p: &str) -> anyhow::Result<Config> {
+        Ok(fs::read_to_string(p).context("reading lion toml config file")?.into())
     }
 
     /// Compiles all files in the current project.
@@ -59,7 +72,7 @@ impl Lion {
             ])
             .output()?;
 
-        todo!()
+        Ok(())
     }
 
     /// Compiles and runs the current project.
@@ -76,6 +89,24 @@ mod tests {
     fn test_create_project() {
         // Create test project
         Lion::create_new_project("test".to_string()).context("creating new test lion project").unwrap();
+
+        // Delete created test project
+        fs::remove_dir_all("test").context("deleting test lion project dir").unwrap();
+    }
+
+    #[test]
+    fn test_compile_project() {
+        // Create test project
+        Lion::create_new_project("test".to_string()).context("creating new test lion project").unwrap();
+
+        // Create test file
+        fs::write("test/src/main.c", "int main() {}").context("creating main.c file in src dir").unwrap();
+        
+        // Compile project
+        Lion::new(Lion::parse_config("test/lion.toml").context("parsing lion.toml").unwrap())
+            .compile()
+            .context("testing project compilation")
+            .unwrap();
 
         // Delete created test project
         fs::remove_dir_all("test").context("deleting test lion project dir").unwrap();
