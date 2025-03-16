@@ -39,4 +39,19 @@ mod tests {
             }
         });
     }
+
+    #[test]
+    fn test_arg_build() {
+        // Create sample args
+        let sample_args = vec!["", "build"];
+        // Parse sample args
+        let parsed_args = Args::try_parse_from(sample_args.clone().into_iter())
+            .context(format!("parsing {sample_args:?} into `Args` data structure"))
+            .unwrap();
+
+        // Assert parsed args have correct info
+        assert_eq!(parsed_args, Args{
+            command: RootCommand::Build
+        });
+    }
 }
