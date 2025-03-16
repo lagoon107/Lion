@@ -6,7 +6,6 @@ mod prelude;
 use clap::Parser;
 use args::{Args, RootCommand};
 use lion::Lion;
-use lion_config::Config;
 
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
@@ -17,7 +16,8 @@ fn main() -> anyhow::Result<()> {
             Lion::create_new_project(name)?;
         },
         RootCommand::Build => {
-            todo!()
+            let lion = Lion::new(Lion::parse_config("lion.toml")?);
+            lion.compile()?;
         }
     }
 
